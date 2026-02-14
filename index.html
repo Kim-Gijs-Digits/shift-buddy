@@ -247,14 +247,28 @@
       .modal .row2,.modal .row3{grid-template-columns:1fr}
     }
     .modalActions{display:flex; gap:12px; justify-content:flex-end; margin-top:14px; flex-wrap:wrap}
-  </style>
+ .app-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.app-logo{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+}
+</style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="top">
       <div class="title">
-        <h1>Shift Buddy</h1>
+      <div class="app-header">
+  <img src="sb-logo.png" alt="Shift Buddy logo" class="app-logo">
+  <h1>Shift Buddy</h1>
+</div>
         <div class="sub">Norm 7u30 - RECUP = 7u30 (1 klik) - offline-first - Made by Kim Gijs </div>
       </div>
       <div class="pill"><b>Vandaag:</b> <span id="todayPill">-</span></div>
