@@ -859,7 +859,7 @@
 
   function addRecup(){
     const date = getTodayYMD();
-    if(!confirm(`RECUP toevoegen voor ${dmy(new Date())}?\nDit doet 7u30 op je overuren.`)) return;
+    openConfirm(`RECUP toevoegen voor ${dmy(new Date())}?\nDit doet 7u30 op je overuren.`)) return;
     state.entries.unshift({
       id: uid(), date, type:"Recup",
       start:null, end:null, pauseMin:0, netMin: RECUP_MIN, createdAt: Date.now()
