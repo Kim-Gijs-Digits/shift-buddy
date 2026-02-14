@@ -992,12 +992,12 @@
       `;
       div.querySelector('[data-act="edit"]').addEventListener("click", ()=> openModal("edit", e));
       div.querySelector('[data-act="del"]').addEventListener("click", ()=>{
-        if(confirm("Deze entry verwijderen?")){
+        openConfirm("Deze entry verwijderen?", () => {
           const idx = state.entries.findIndex(x=>x.id===e.id);
           if(idx>=0) state.entries[idx].deletedAt = Date.now();
           saveState();
           renderAll();
-        }
+        });
       });
       elHistoryList.appendChild(div);
     });
@@ -1201,7 +1201,11 @@ function showToast(message, type="warn"){
     el.classList.remove("show");
   }, 2200);
 }
-showToast("Test melding!");
+function openConfirm(message, onOk){
+  if(confirm(message)){
+    onOk();
+  }
+}
 </script>
 
 <script>
