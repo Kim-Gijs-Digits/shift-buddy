@@ -855,6 +855,7 @@
     saveState();
     resetTimer();
     renderAll();
+    });
   }
 
   function addRecup(){
@@ -943,6 +944,7 @@
     saveState();
     closeModal();
     renderAll();
+    });
   }
 
   mType.addEventListener("change", ()=>{
@@ -1040,38 +1042,36 @@
   }
 
   function importJSON(file){
-    const reader = new FileReader();
-    reader.onload = () => {
-      try{
-        const parsed = JSON.parse(reader.result);
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const parsed = JSON.parse(reader.result);
 
-        if(parsed && parsed.state && parsed.meta){
-          state = parsed.state;
-          meta = parsed.meta;
-        }else if(parsed && parsed.settings && parsed.entries){
-          state = parsed;
-        }else{
-          showToast("Ongeldig JSON bestand.");
-          return;
-          return;
-         }
-          };
-       
-
-        if(!state.settings) state.settings = {startSaldoMin:0};
-        if(!state.timer) state.timer = {running:false,startMs:null,accMs:0};
-        if(!Array.isArray(state.entries)) state.entries = [];
-        if(!meta) meta = defaultMeta();
-
-        saveState(); saveMeta();
-        renderAll();
-        showToast("Import gelukt ");
-      }catch(e){
+      if(parsed && parsed.state && parsed.meta){
+        state = parsed.state;
+        meta  = parsed.meta;
+      }else if(parsed && parsed.settings && parsed.entries){
+        state = parsed;
+        meta  = defaultMeta();
+      }else{
         showToast("Ongeldig JSON bestand.");
+        return;
       }
-    };
-    reader.readAsText(file);
-  }
+
+      if(!state.settings) state.settings = { startSaldoMin: 0 };
+      if(!state.timer)    state.timer    = { running:false, startMs:null, accMs:0 };
+      if(!Array.isArray(state.entries)) state.entries = [];
+      if(!meta) meta = defaultMeta();
+
+      saveState(); saveMeta();
+      renderAll();
+      showToast("Import gelukt");
+    }catch(e){
+      showToast("Ongeldig JSON bestand.");
+    }
+  };
+  reader.readAsText(file);
+}
 
   function renderSettings(){
     elStartSaldoInput.value = formatHM(state.settings.startSaldoMin || 0);
