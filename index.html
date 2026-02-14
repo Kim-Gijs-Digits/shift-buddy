@@ -258,6 +258,97 @@
   height:48px;
   border-radius:12px;
 }
+/* ===== Custom Toast + Confirm Modal ===== */
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(20,8,11,.92);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(255,255,255,.92);
+  padding: 12px 14px;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.55);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  max-width: min(92vw, 520px);
+  font-weight: 700;
+}
+
+.toast.show{
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.ok{ border-color: rgba(46,204,113,.35); }
+.toast.warn{ border-color: rgba(255,184,0,.35); }
+.toast.err{ border-color: rgba(255,99,99,.35); }
+
+.appModalOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  padding: 18px;
+}
+
+.appModalOverlay.show{ display: flex; }
+
+.appModal{
+  width: min(560px, 94vw);
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  box-shadow: 0 22px 70px rgba(0,0,0,.60);
+  overflow: hidden;
+}
+
+.appModalHeader{
+  padding: 14px 16px;
+  font-size: 18px;
+  font-weight: 900;
+  color: rgba(255,255,255,.95);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.appModalBody{
+  padding: 14px 16px;
+  color: rgba(255,255,255,.86);
+  line-height: 1.35;
+}
+
+.appModalActions{
+  padding: 14px 16px 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btnGhost{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(255,255,255,.90);
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 900;
+}
+
+.btnDanger{
+  background: rgba(255,99,99,.20);
+  border: 1px solid rgba(255,99,99,.35);
+  color: rgba(255,255,255,.95);
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 900;
+}
 </style>
 </head>
 
@@ -742,7 +833,7 @@
   function saveWorkEntry(){
     const ms = currentElapsedMs();
     if(ms < 1000){
-      alert("Timer is te kort. Gebruik START of + Handmatig.");
+      showToast("Timer is te kort. Gebruik START of + Handmatig.");
       return;
     }
     const pause = clamp(parseInt(elPauseMin.value||"0",10)||0, 0, 600);
@@ -812,9 +903,9 @@
     const end = (mEnd.value||"").trim();
     const pauseMin = clamp(parseInt(mPause.value||"0",10)||0, 0, 600);
 
-    if(!date){ alert("Kies een datum."); return; }
+    if(!date){ showToast("Kies een datum."); return; }
     const netMin = netFromFields(type, start, end, pauseMin);
-    if(netMin==null){ alert("Vul start en einde in (of kies Recup)."); return; }
+    if(netMin==null){ showToast("Vul start en einde in (of kies Recup)."); return; }
 
     if(editingId){
       const idx = state.entries.findIndex(e=>e.id===editingId);
@@ -957,7 +1048,7 @@
         }else if(parsed && parsed.settings && parsed.entries){
           state = parsed;
         }else{
-          alert("Ongeldig JSON bestand.");
+          showToast("Ongeldig JSON bestand.");
           return;
         }
 
@@ -968,9 +1059,9 @@
 
         saveState(); saveMeta();
         renderAll();
-        alert("Import gelukt ");
+        showToast("Import gelukt ");
       }catch(e){
-        alert("Ongeldig JSON bestand.");
+        showToast("Ongeldig JSON bestand.");
       }
     };
     reader.readAsText(file);
@@ -982,13 +1073,13 @@
   function saveSettings(){
     const mins = parseHM(elStartSaldoInput.value);
     if(mins==null){
-      alert("Start saldo moet in formaat u:min zijn, bv 60:00");
+      showToast("Start saldo moet in formaat u:min zijn, bv 60:00");
       return;
     }
     state.settings.startSaldoMin = mins;
     saveState();
     renderAll();
-    alert("Instellingen opgeslagen ");
+    showToast("Instellingen opgeslagen ");
   }
 
   function renderOnlineBadge(){
@@ -1094,9 +1185,23 @@ if (fileImport) {
     }
 
     renderAll();
+    
   }
   init();
 })();
+function showToast(message, type="warn"){
+  const el = document.getElementById("toast");
+  if(!el) return;
+
+  el.textContent = message;
+  el.className = "toast " + type;
+  el.classList.add("show");
+
+  setTimeout(()=>{
+    el.classList.remove("show");
+  }, 2200);
+}
+showToast("Test melding!");
 </script>
 
 <script>
@@ -1108,6 +1213,22 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<!-- ... je hele app ... -->
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Confirm Modal -->
+  <div id="appModalOverlay" class="appModalOverlay">
+    <div class="appModal" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
+      <div class="appModalHeader" id="appModalTitle">Bevestigen</div>
+      <div class="appModalBody" id="appModalBody">Ben je zeker?</div>
+      <div class="appModalActions">
+        <button id="appModalCancel" class="btnGhost" type="button">Annuleren</button>
+        <button id="appModalOk" class="btnDanger" type="button">OK</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
