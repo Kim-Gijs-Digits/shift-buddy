@@ -858,15 +858,18 @@
   }
 
   function addRecup(){
-    const date = getTodayYMD();
-    openConfirm(`RECUP toevoegen voor ${dmy(new Date())}?\nDit doet 7u30 op je overuren.`)) return;
+  const date = getTodayYMD();
+  const msg = `RECUP toevoegen voor ${dmy(new Date())}?\nDit doet 7u30 op je overuren.`;
+
+  openConfirm(msg, () => {
     state.entries.unshift({
       id: uid(), date, type:"Recup",
       start:null, end:null, pauseMin:0, netMin: RECUP_MIN, createdAt: Date.now()
     });
     saveState();
     renderAll();
-  }
+  });
+}
 
   function openModal(mode, entry=null){
     editingId = entry ? entry.id : null;
@@ -934,7 +937,7 @@
   }
   function deleteEditing(){
     if(!editingId) return;
-    if(!confirm("Deze entry verwijderen?")) return;
+    openConfirm("Deze entry verwijderen?", () => {
     const idx = state.entries.findIndex(e=>e.id===editingId);
     if(idx>=0) state.entries[idx].deletedAt = Date.now();
     saveState();
@@ -1050,7 +1053,10 @@
         }else{
           showToast("Ongeldig JSON bestand.");
           return;
-        }
+          return;
+         }
+          };
+       
 
         if(!state.settings) state.settings = {startSaldoMin:0};
         if(!state.timer) state.timer = {running:false,startMs:null,accMs:0};
