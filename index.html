@@ -158,15 +158,12 @@
       color:var(--muted);
     }
 
-    .grid3{
-      display:grid;
-     grid-template-columns: repeat(2, 1fr);
-      gap:12px;
-      margin-top:14px;
-    }
-    @media (min-width:1040px){
-      .grid3{grid-template-columns: repeat(3, minmax(0,1fr));}
-    }
+.grid3{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
     .miniCard{
       border:1px solid var(--line);
       background: rgba(255,255,255,.05);
@@ -175,8 +172,8 @@
       box-shadow: 0 10px 22px rgba(0,0,0,.18);
     }
     .miniCard .k{color:var(--muted); font-weight:900; margin-bottom:6px}
-    .miniCard .v{font-size:54px; font-weight:950; letter-spacing:.5px; line-height:1}
-    .miniCard .v.sm{font-size:40px}
+    .miniCard .v{font-size:42px; font-weight:950; letter-spacing:.5px; line-height:1}
+    .miniCard .v.sm{font-size:36px}
 
     .list{margin-top:12px}
     .entry{
@@ -372,8 +369,7 @@
     <div class="tabs">
       <div class="tabBtn active" data-tab="tab1">Dag-Shift</div>
       <div class="tabBtn" data-tab="tab2">Historiek</div>
-      <div class="tabBtn" data-tab="tab3">Saldo</div>
-      <div class="tabBtn" data-tab="tab4">Backup & Login</div>
+      <div class="tabBtn" data-tab="tab4">⚙️ Instellingen</div>
     </div>
 
     <div id="tab1" class="tab">
@@ -399,8 +395,7 @@
 
         <div class="status" id="status">Nog niet gestart</div>
 
-        <label for="pauseMin">Pauze (min) - wordt afgetrokken bij Opslaan Werk</label>
-        <input id="pauseMin" type="number" min="0" step="5" value="30" />
+  
 
         <div class="grid3">
           <div class="miniCard">
@@ -411,19 +406,23 @@
             <div class="k">Deze week (werk)</div>
             <div class="v" id="weekWork">0:00</div>
           </div>
-          <div class="miniCard">
-            <div class="k">Overuren saldo</div>
-            <div class="v sm salzero" id="overtimeSaldo">0:00</div>
-          </div>
+          
         </div>
 
         <div class="miniCard" style="margin-top:12px;">
           <div class="k">Laatste entry</div>
           <div id="lastEntry" class="muted" style="font-weight:950; margin-top:6px;">-</div>
         </div>
-      </div>
-    </div>
+ <div class="miniCard" style="margin-top:12px;">
+  <div class="k">Saldo overuren</div>
+  <div id="overtimeSaldo" class="v" style="font-size:28px; font-weight:900; margin-top:6px;">
+    0:00
+  </div>
+</div>
 
+</div>
+</div>
+     
     <div id="tab2" class="tab" style="display:none;">
       <div class="card">
         <div class="h2Row">
@@ -432,35 +431,8 @@
     <button class="btnSmall" id="btnAddManual">+ Handmatig</button>
   </div>
 </div>
-        <div class="muted">Alles staat lokaal op je toestel. Export JSON = jouw -nooit kwijt- backup.</div>
+        <div class="muted">Tip!!! Vergeten uit te tikken?<br>Voeg manueel toe!!!</div>
         <div class="list" id="historyList"></div>
-      </div>
-    </div>
-
-    <div id="tab3" class="tab" style="display:none;">
-      <div class="card">
-        <div class="h2Row">
-          <h2>Saldo</h2>
-          <span class="badge"><span id="normBadge">Norm: 7:30</span></span>
-        </div>
-
-        <div class="grid3" style="grid-template-columns:1fr;">
-          <div class="miniCard">
-            <div class="k">Overuren saldo</div>
-            <div class="v" id="saldoBig">0:00</div>
-          </div>
-          <div class="miniCard">
-            <div class="k">Recup dagen</div>
-            <div class="v" id="recupDays">0</div>
-          </div>
-        </div>
-
-        <div class="muted2" style="margin-top:12px; font-weight:900;">
-          Logica:
-          <br>- Per kalenderdag telt werk(net) mee.
-          <br>- Boven 7:30 = plus overuren, eronder = tekort gaat van overuren af.
-          <br>- RECUP = 7:30 op overuren.
-        </div>
       </div>
     </div>
 
@@ -491,7 +463,7 @@
         </div>
 
         <div class="muted2" style="margin-top:10px; font-weight:900;">
-          Tip: gebruik Backup nu en sla het JSON bestand op in Google Drive. Dan kan je altijd importeren op een andere gsm.
+          Tip: Maak regelmatig backup.
         </div>
 
         <div class="hr"></div>
@@ -499,7 +471,7 @@
         <div class="h2Row">
           <div>
             <div class="muted" style="font-weight:950;">Startsaldo</div>
-            <div class="muted2">Voorbeeld: 60:00 = 60 uur</div>
+            <div class="muted2">3600min = 60 uur</div>
           </div>
         </div>
         <label for="startSaldoInput">Start saldo overuren (u:min)</label>
@@ -507,6 +479,10 @@
         <div class="row" style="margin-top:12px;">
           <button class="btnGhost" id="btnSaveSettings">Instellingen opslaan</button>
         </div>
+        <div class="sp"></div>
+
+<label for="pauseMin">Standaard pauze (min)</label>
+<input id="pauseMin" type="number" min="0" step="5" value="30" />
 
         <div class="hr"></div>
 
@@ -514,7 +490,7 @@
           <div>
             <div class="muted" style="font-weight:950;">Google login + Cloud sync</div>
             <div class="muted2" id="loginNote">
-              Werkt pas betrouwbaar als je app via https draait (gehost). Lokaal kan geblokkeerd worden.
+              Nog niet mogelijk.
             </div>
           </div>
         </div>
@@ -539,19 +515,23 @@
   <!-- MODAL -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
-      <div class="h2Row">
-        <h3 id="modalTitle">Handmatig toevoegen</h3>
-        <button class="btnSmall btnDanger" id="btnCloseModal">Sluiten</button>
-      </div>
+      <div class="h2Row" style="align-items:center;">
+  <h3 id="modalTitle">Handmatig toevoegen</h3>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span class="muted2" style="font-weight:600;">
+      Vergeet uit te tikken? Voeg gewoon de juiste tijden toe.
+    </span>
+    <button class="btnSmall btnDanger" id="btnCloseModal">Sluiten</button>
+  </div>
+</div>
 
       <div class="hr"></div>
-
-      <div class="modalBody">
-        <div class="modalRow row2" style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px;">
-          <div>
+         
+                   <div>
             <label for="mDate">Datum</label>
             <input id="mDate" type="date" />
           </div>
+          
           <div>
             <label for="mType">Type</label>
             <select id="mType">
@@ -559,9 +539,9 @@
               <option value="Recup">Recup</option>
             </select>
           </div>
-        </div>
+       
 
-        <div class="modalRow row3" style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:10px;">
+    <div class="modalRow row3" style="display:grid; grid-template-columns: 1.2fr 1.2fr 0.8fr;">
           <div>
             <label for="mStart">Start (HH:MM)</label>
             <input id="mStart" type="time" />
@@ -576,10 +556,7 @@
           </div>
         </div>
 
-        <div class="muted2" style="margin-top:10px; font-weight:900;">
-          Tip: -vergeten uit te tikken-? Voeg gewoon de juiste tijden toe.
-        </div>
-
+        
         <div class="modalActions">
           <button class="btnGhost" id="btnDeleteInModal" style="display:none;">Verwijderen</button>
           <button class="btnSave" id="btnSaveModal">Opslaan</button>
@@ -595,8 +572,8 @@
 
 <script>
 (() => {
-  const STORE_KEY = "shiftBuddy_state_v1";
-  const META_KEY  = "shiftBuddy_meta_v1";
+  const STORE_KEY = "shiftBuddy_beta_state_v1";
+const META_KEY  = "shiftBuddy_beta_meta_v1";
   const NORM_MIN  = 7*60 + 30;
   const RECUP_MIN = 7*60 + 30;
 
@@ -960,13 +937,13 @@
   });
 
   function entryTitle(e){
-    if(e.type==="Recup") return `${e.date} - RECUP`;
-    return `${e.date} - ${(e.start||"-")}-${(e.end||"-")}`;
-  }
+  const d = new Date(e.date);
+  return d.toLocaleDateString("nl-BE");
+}
   function entrySubtitle(e){
-    if(e.type==="Recup") return `Recup - gaat van overuren af (7:30)`;
-    return `Werk - netto ${formatHM(e.netMin||0)} - pauze ${e.pauseMin||0} min`;
-  }
+if(e.type==="Recup") return `RECUP - gaat van overuren af (${formatHM(e.netMin||0)})`;
+  return `WERK ${e.start || "-"}-${e.end || "-"} • netto ${formatHM(e.netMin||0)} • pauze ${e.pauseMin||0}m`;
+}
   function entryChip(e){
     if(e.type==="Recup") return "7:30";
     return formatHM(e.netMin||0);
@@ -1109,12 +1086,17 @@
 
     elTodayWork.textContent = formatHM(todayNet);
     elWeekWork.textContent = formatHM(weekNet);
+if (elOvertimeSaldo) {
+  elOvertimeSaldo.textContent = formatHM(ot);
+  setSaldoColor(elOvertimeSaldo, ot);
+}
 
-    elOvertimeSaldo.textContent = formatHM(ot);
-    setSaldoColor(elOvertimeSaldo, ot);
-
-    elSaldoBig.textContent = formatHM(ot);
-    elRecupDays.textContent = String(rc);
+if (elSaldoBig) {
+  elSaldoBig.textContent = formatHM(ot);
+  setSaldoColor(elSaldoBig, ot);
+}
+    
+    
 
     const last = state.entries
       .filter(e=>!e.deletedAt)
