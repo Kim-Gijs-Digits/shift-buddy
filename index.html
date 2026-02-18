@@ -363,6 +363,27 @@
   border-radius: 14px;
   font-weight: 900;
 }
+/* bestaande css hier ... */
+
+.saldoMain{
+  font-size:42px;
+  font-weight:900;
+}
+
+.saldoMain .unit{
+  font-size:22px;
+  font-weight:600;
+}
+
+.saldoSub{
+  font-family:monospace;
+  font-size:18px;
+  margin-top:6px;
+}
+
+.saldoSub span{
+  opacity:0.9;
+}
 </style>
 </head>
 
@@ -1130,7 +1151,23 @@ function entryChip(e){
     elTodayWork.textContent = formatHM(todayNet);
     elWeekWork.textContent = formatHM(weekNet);
 if (elOvertimeSaldo) {
-  elOvertimeSaldo.textContent = formatHM(ot);
+
+  const normDay = state.settings.normDayMin ?? NORM_MIN;
+
+  const totalMin = ot;
+  const totalDays = normDay > 0 ? (totalMin / normDay) : 0;
+
+  const daysRounded = totalDays.toFixed(2);
+
+  elOvertimeSaldo.innerHTML = `
+  <div class="saldoMain">
+    ${formatHM(totalMin)} <span class="unit">U</span>
+  </div>
+  <div class="saldoSub">
+    = ${totalMin} <span>min</span><br>
+    = ${daysRounded} <span>dag</span>
+  </div>
+`;
   setSaldoColor(elOvertimeSaldo, ot);
 }
 
